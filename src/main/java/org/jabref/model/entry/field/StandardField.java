@@ -18,6 +18,7 @@ public enum StandardField implements Field {
     ABSTRACT("abstract"),
     ADDENDUM("addendum"),
     ADDRESS("address"),
+    AFILLIATION("afilliation"),
     AFTERWORD("afterword", FieldProperty.PERSON_NAMES),
     ANNOTE("annote"),
     ANNOTATION("annotation"),

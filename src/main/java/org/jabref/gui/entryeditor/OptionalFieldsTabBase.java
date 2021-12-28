@@ -22,6 +22,7 @@ import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.BibEntryType;
 import org.jabref.model.entry.BibEntryTypesManager;
 import org.jabref.model.entry.field.Field;
+import org.jabref.model.entry.field.StandardField;
 import org.jabref.preferences.PreferencesService;
 
 public class OptionalFieldsTabBase extends FieldsEditorTab {
@@ -54,7 +55,12 @@ public class OptionalFieldsTabBase extends FieldsEditorTab {
         Optional<BibEntryType> entryType = entryTypesManager.enrich(entry.getType(), databaseContext.getMode());
         if (entryType.isPresent()) {
             if (isPrimaryOptionalFields) {
-                return entryType.get().getPrimaryOptionalFields();
+                Set<Field> s = entryType.get().getPrimaryOptionalFields();
+                Field f1 = StandardField.NATIONALITY;
+                Field f2 = StandardField.AFILLIATION;
+                s.add(f1);
+                s.add(f2);
+                return s;
             } else {
                 return entryType.get().getSecondaryOptionalNotDeprecatedFields();
             }
