@@ -1,10 +1,10 @@
 package org.jabref.gui.collabs;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -27,7 +27,7 @@ public class CollaborationsViewModel extends AbstractViewModel {
 
     private String formatCollabs(StateManager stateManager) {
         List<BibEntry> entries;
-        Map<String, List<String>> collabs = new TreeMap<String, List<String>>();
+        Map<String, TreeSet<String>> collabs = new TreeMap<String, TreeSet<String>>();
         String result = "Autores:\n";
 
         entries = stateManager.getSelectedEntries();
@@ -35,18 +35,20 @@ public class CollaborationsViewModel extends AbstractViewModel {
         for (BibEntry entry: entries) {
             String entryAuthors = entry.getField(StandardField.AUTHOR).get();
 
-            List<String> names = new ArrayList<>();
-            names.addAll(List.of(entryAuthors.split(" and ")));
+            TreeSet<String> names = new TreeSet<>();
+            String[] aux = entryAuthors.split(" and ");
 
-            String mainAuthor = names.get(0);
-            names.remove(0);
+            String mainAuthor = aux[0];
+            for(int i = 1; i < aux.length; i++)
+                names.add(aux[i]);
+
             if(collabs.containsKey(mainAuthor))
                 collabs.get(mainAuthor).addAll(names);
             else
                 collabs.put(mainAuthor, names);
 
             for(String name: names) {
-                collabs.putIfAbsent(name, new ArrayList<>());
+                collabs.putIfAbsent(name, new TreeSet<>());
                 collabs.get(name).add(mainAuthor);
             }
         }
