@@ -3,6 +3,7 @@ package org.jabref.gui.collabs;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -10,7 +11,10 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
 import org.jabref.gui.AbstractViewModel;
+import org.jabref.gui.ClipBoardManager;
+import org.jabref.gui.DialogService;
 import org.jabref.gui.StateManager;
+import org.jabref.logic.l10n.Localization;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
 
@@ -18,8 +22,12 @@ public class CollaborationsViewModel extends AbstractViewModel {
 
     private final ReadOnlyStringWrapper collabs = new ReadOnlyStringWrapper();
     private final ReadOnlyStringWrapper heading = new ReadOnlyStringWrapper();
+    private final ClipBoardManager clipBoardManager;
+    private final DialogService dialogService;
 
-    public CollaborationsViewModel(StateManager stateManager) {
+    public CollaborationsViewModel(StateManager stateManager, ClipBoardManager clipBoardManager, DialogService dialogService) {
+        this.clipBoardManager = Objects.requireNonNull(clipBoardManager);
+        this.dialogService = Objects.requireNonNull(dialogService);
         heading.set("Collaborations:");
 
         collabs.set(formatCollabs(stateManager));
@@ -28,7 +36,7 @@ public class CollaborationsViewModel extends AbstractViewModel {
     private String formatCollabs(StateManager stateManager) {
         List<BibEntry> entries;
         Map<String, TreeSet<String>> collabs = new TreeMap<String, TreeSet<String>>();
-        String result = "Autores:\n";
+        String result = "Authors = {all of their collaborations}\n\n";
 
         entries = stateManager.getSelectedEntries();
 
@@ -84,7 +92,9 @@ public class CollaborationsViewModel extends AbstractViewModel {
         return heading.get();
     }
 
-    public void botaoInutil() {
-        System.out.println("nada");
+    public void copyCollabs() {
+        clipBoardManager.setContent(getCollabs());
+        dialogService.notify(Localization.lang("Copied collabs to clipboard"));
     }
+
 }

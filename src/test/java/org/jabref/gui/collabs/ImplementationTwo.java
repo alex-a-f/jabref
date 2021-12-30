@@ -3,6 +3,10 @@ package org.jabref.gui.collabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import org.jabref.gui.ClipBoardManager;
+import org.jabref.gui.DialogService;
 import org.jabref.gui.StateManager;
 import org.jabref.model.entry.BibEntry;
 import org.jabref.model.entry.field.StandardField;
@@ -20,6 +24,9 @@ public class ImplementationTwo {
     private BibEntry entryFour;
     private CollaborationsViewModel collabsViewModel;
     private StateManager stateManager;
+
+    @Inject private DialogService dialogService;
+    @Inject private ClipBoardManager clipBoardManager;
 
     @BeforeEach
     void setup() {
@@ -42,7 +49,7 @@ public class ImplementationTwo {
         entries.add(entryFour);
         stateManager.setSelectedEntries(entries);
 
-        this.collabsViewModel = new CollaborationsViewModel(stateManager);
+        this.collabsViewModel = new CollaborationsViewModel(stateManager, clipBoardManager, dialogService);
     }
 
     @Test
